@@ -1,5 +1,5 @@
--- enjoy my shit skidded code 
--- byfr0n
+
+- enjoy my chat gpt skid code
 function sandbox(var,func)
 	local env = getfenv(func)
 	local newenv = setmetatable({},{
@@ -89,10 +89,10 @@ local states = {
 	Checked = "rbxassetid://4458804262"
 }
 
-local highlightNames = {}
-local localPlayer = game.Players.LocalPlayer
+local highlightNames = {} -- Table to store generated highlight names
+local localPlayer = game.Players.LocalPlayer -- Reference to the local player
 
-
+-- Function to generate a random 10-character string
 local function generateRandomName()
 	local characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 	local name = ""
@@ -103,35 +103,36 @@ local function generateRandomName()
 	return name
 end
 
-
+-- Function to change button state
 function changestates(RequestedState)
 	button.Image = states[RequestedState]
 end
 
-
+-- Function to highlight players
 function checked()
 	checkedstate = true
 	changestates("Checked")
 	for _, player in pairs(game.Players:GetPlayers()) do
+		-- Skip the local player
 		if player ~= localPlayer then
+			-- Check if the player already has a highlight
 			if not player.Character:FindFirstChildWhichIsA("Highlight") then
 				local highlight = Instance.new("Highlight")
-				highlight.Name = generateRandomName()
+				highlight.Name = generateRandomName() -- Set a random name for the highlight
 				highlight.FillColor = player.TeamColor.Color
-				highlight.OutlineTransparency = 0.9
+				highlight.OutlineTransparency = 0.9 -- Outline is hidden, visible only through walls
 				highlight.Parent = player.Character
 				highlight.OutlineColor = BrickColor.Gray().Color
 				highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-
+				-- Store the name to remove it later
 				table.insert(highlightNames, highlight.Name)
 			end
 		end
 	end
 end
 
-
-
+-- Function to remove highlights from players
 function unchecked()
 	checkedstate = false
 	changestates("Unchecked")
@@ -147,9 +148,11 @@ function unchecked()
 		end
 	end
 
+	-- Clear the highlight names table after removal
 	highlightNames = {}
 end
 
+-- Connect button click to toggle highlight state
 button.MouseButton1Click:Connect(function()
 	if checkedstate == false then
 		checked()
@@ -201,7 +204,7 @@ local states = {
 	Checked = "rbxassetid://4458804262"
 }
 local player = game.Players.LocalPlayer
-local originalName = player.DisplayName
+local originalName = player.DisplayName -- Store the player's original display name
 
 function changestates(RequestedState)
 	button.Image = states[RequestedState]
@@ -210,13 +213,15 @@ end
 function checked()
 	checkedstate = true
 	changestates("Checked")
-	player.DisplayName = "Andromeda"
+	player.DisplayName = "Andromeda" -- Spoof the player's name
+	player.Name = "Andromeda" -- Restore the player's original name
 end
 
 function unchecked()
 	checkedstate = false
 	changestates("Unchecked")
-	player.DisplayName = originalName
+	player.DisplayName = originalName -- Restore the player's original name
+	player.Name = originalName -- Restore the player's original name
 end
 
 button.MouseButton1Click:Connect(function()
@@ -297,7 +302,7 @@ end
 function checked()
 	checkedstate = true
 	changestates("Checked")
-	startSpeedBoost(0.2)
+	startSpeedBoost(0.2) -- Speed boost value, you can change "2" to adjust the speed
 end
 
 function unchecked()
@@ -450,61 +455,68 @@ local UserInputService = game:GetService("UserInputService")
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local textButton = script.Parent
+local textButton = script.Parent -- Assuming this script is a child of the TextButton
 
-local minBackwardDistance = 0.2  
-local maxBackwardDistance = 1  
-local forwardDistance = 9   
-local moveSteps = 10           
-local stepDelay = 0.02        
+-- Distance settings
+local minBackwardDistance = 0.2  -- Minimum random backward distance
+local maxBackwardDistance = 1  -- Maximum random backward distance
+local forwardDistance = 9   -- How far to teleport forward
+local moveSteps = 10           -- Number of steps to simulate lag
+local stepDelay = 0.02         -- Delay between each step
 
-
+-- Default keybind
 local keybind = Enum.KeyCode.G
 textButton.Text = "G"
 
-
+-- Function to handle the movement logic with lag effect
 local function performMovementWithLag()
+	-- Generate a random backward distance between min and max values
 	local randomBackwardDistance = math.random(minBackwardDistance, maxBackwardDistance)
 
+	-- Calculate the backward and forward movement
 	local backwardCFrame = humanoidRootPart.CFrame * CFrame.new(0, 0, randomBackwardDistance)
 	local forwardCFrame = backwardCFrame * CFrame.new(0, 0, -forwardDistance)
 
+	-- Simulate the lag effect by moving in small steps
 	for i = 1, moveSteps do
 		humanoidRootPart.CFrame = humanoidRootPart.CFrame:Lerp(backwardCFrame, i / moveSteps)
 		wait(stepDelay)
 	end
 
+	-- Simulate the forward movement with lag effect
 	for i = 1, moveSteps do
 		humanoidRootPart.CFrame = humanoidRootPart.CFrame:Lerp(forwardCFrame, i / moveSteps)
 		wait(stepDelay)
 	end
 end
 
-
+-- Function to listen for the key press and perform movement
 local function onKeyPress(input, gameProcessedEvent)
 	if input.KeyCode == keybind and not gameProcessedEvent then
 		performMovementWithLag()
 	end
 end
 
-
+-- Connect the key press event
 UserInputService.InputBegan:Connect(onKeyPress)
 
-
+-- Function to handle changing the keybind
 local function changeKeybind()
 	textButton.Text = "Press key"
 
-
+	-- Wait for the next key press to set as the new keybind
 	local inputConnection
 	inputConnection = UserInputService.InputBegan:Connect(function(input)
+		-- Set the new keybind
 		keybind = input.KeyCode
 		textButton.Text = keybind.Name
 
-
+		-- Disconnect the temporary connection to prevent further changes
 		inputConnection:Disconnect()
 	end)
 end
 
+-- Connect the TextButton's click event to change the keybind
 textButton.MouseButton1Click:Connect(changeKeybind)
 
 end))
@@ -513,7 +525,7 @@ LocalScript18.Parent = ScreenGui0
 table.insert(cors,sandbox(LocalScript18,function()
 
 script.Parent.join:Play()
-
+-- Function to generate a random 10-character string
 local function generateRandomString(length)
 	local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 	local randomString = ""
@@ -524,7 +536,7 @@ local function generateRandomString(length)
 	return randomString
 end
 
-
+-- Recursive function to rename an object and all its descendants
 local function renameObjectAndChildren(object)
 	object.Name = generateRandomString(10)
 	for _, child in pairs(object:GetChildren()) do
@@ -532,18 +544,20 @@ local function renameObjectAndChildren(object)
 	end
 end
 
-
+-- Rename script.Parent and all its descendants
 renameObjectAndChildren(script.Parent)
 
+-- Send a notification to the player
 local function notifyPlayer(message)
 	game.StarterGui:SetCore("SendNotification", {
 		Title = "Andromeda",
 		Text = message,
-		Duration = 5, 
-		Icon = "rbxassetid://18888571875" 
+		Duration = 5, -- Notification duration in seconds
+		Icon = "rbxassetid://18888571875" -- Optional icon
 	})
 end
 
+-- Function to handle key presses
 local function onKeyPress(input)
 	if input.KeyCode == Enum.KeyCode.Insert then
 		script.Parent.Enabled = not script.Parent.Enabled
@@ -553,9 +567,11 @@ local function onKeyPress(input)
 end
 
 
+-- Send notifications when the script starts
 notifyPlayer("Menu toggle is INSERT")
 notifyPlayer("To self destruct press END")
 
+-- Connect the function to the UserInputService to listen for key presses
 local UserInputService = game:GetService("UserInputService")
 UserInputService.InputBegan:Connect(onKeyPress)
 

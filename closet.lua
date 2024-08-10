@@ -1,5 +1,5 @@
 
-- enjoy my chat gpt skid code
+-- enjoy my chat gpt skid code
 function sandbox(var,func)
 	local env = getfenv(func)
 	local newenv = setmetatable({},{

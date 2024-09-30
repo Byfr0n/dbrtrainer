@@ -1,3 +1,5 @@
+## DEVELOPMENT STATUS IS DOWN BUT THE LITE VERSION SHOULD STILL WOKR!!!
+
 # Andromeda
 ####  The DBR trainer of all time
 
